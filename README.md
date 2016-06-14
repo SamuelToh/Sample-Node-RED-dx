@@ -5,7 +5,7 @@ This project delivers a set of node-red nodes working with the IBM Digital Exper
 Navigate into your node-red folder and use the ```npm``` command to get the extension installed
 
     cd $HOME/.node-red/
-    npm install node-red-contrib-digital-experience
+    npm install git+ssh://git@github.com:digexp/Sample-Node-RED-dx.git
 
 after the plugin is successfully installed restart your node-red process
 
