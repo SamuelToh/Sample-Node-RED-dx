@@ -1,7 +1,5 @@
 ## Open todo items
 
-* add screenshots to the README.md
-* setup git repository
 * publish to npm
 * Add promises support
 * move portal REST calls into its own module
