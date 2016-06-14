@@ -1,0 +1,111 @@
+[{
+  "id": "d4442332.2bbbe",
+  "type": "dx-server",
+  "name": "demo server",
+  "host": "www.yourco.com",
+  "context": "/wps",
+  "username": "",
+  "password": "",
+  "port": "80"
+}, {
+  "id": "30a66a4f.cf5996",
+  "type": "watch",
+  "name": "",
+  "files": "<the folder to watch>",
+  "x": 298.111083984375,
+  "y": 119.34912109375,
+  "z": "45590ccf.baa6f4",
+  "wires": [
+    ["8e848259.717b8"]
+  ]
+}, {
+  "id": "5dd4de01.a22b2",
+  "type": "debug",
+  "name": "",
+  "active": true,
+  "console": "true",
+  "complete": "contentitem",
+  "x": 874.1110992431641,
+  "y": 432.3490962982178,
+  "z": "45590ccf.baa6f4",
+  "wires": []
+}, {
+  "id": "2f5be930.d0a416",
+  "type": "alchemy-image-analysis",
+  "name": "",
+  "apikey": "",
+  "image-feature": "imageKeywords",
+  "x": 466.111083984375,
+  "y": 270.34906005859375,
+  "z": "45590ccf.baa6f4",
+  "wires": [
+    ["88bb5414.7744a8"]
+  ]
+}, {
+  "id": "69e6a3e7.96195c",
+  "type": "file in",
+  "name": "read file",
+  "filename": "",
+  "format": "",
+  "x": 646.111083984375,
+  "y": 177.34912109375,
+  "z": "45590ccf.baa6f4",
+  "wires": [
+    ["2f5be930.d0a416"]
+  ]
+}, {
+  "id": "8e848259.717b8",
+  "type": "function",
+  "name": "prepare input",
+  "func": "msg.filename = msg.payload;\nreturn msg;",
+  "outputs": 1,
+  "noerr": 0,
+  "x": 491.111083984375,
+  "y": 177.34912109375,
+  "z": "45590ccf.baa6f4",
+  "wires": [
+    ["69e6a3e7.96195c"]
+  ]
+}, {
+  "id": "fb7b2950.0484d8",
+  "type": "dx-content-item",
+  "name": "update/create content item",
+  "action": "update",
+  "parent": "",
+  "template": "",
+  "server": "d4442332.2bbbe",
+  "x": 537.1110992431641,
+  "y": 344.3490962982178,
+  "z": "45590ccf.baa6f4",
+  "wires": [
+    ["9dedbf97.62124"]
+  ]
+}, {
+  "id": "9dedbf97.62124",
+  "type": "dx-content-element",
+  "name": "save image elememnt",
+  "action": "update",
+  "elementconfig": "preset",
+  "elementname": "Image",
+  "mimetype": "image/jpeg",
+  "server": "d4442332.2bbbe",
+  "x": 798.1110992431641,
+  "y": 345.3490962982178,
+  "z": "45590ccf.baa6f4",
+  "wires": [
+    ["5dd4de01.a22b2"]
+  ]
+}, {
+  "id": "88bb5414.7744a8",
+  "type": "function",
+  "name": "preprare input",
+  "func": "msg.contentitem = {};\nmsg.contentitem.name = msg.file\n\nif (msg.result && msg.result.length > 0) {\n    msg.contentitem.keywords = [];\n    for (var i = 0; i < msg.result.length; i++) {\n        msg.contentitem.keywords[i] = msg.result[i].text;\n    }\n}\nreturn msg;",
+  "outputs": 1,
+  "noerr": 0,
+  "x": 307,
+  "y": 343.99993896484375,
+  "z": "45590ccf.baa6f4",
+  "wires": [
+    ["fb7b2950.0484d8"]
+  ]
+}]

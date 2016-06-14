@@ -1,0 +1,447 @@
+<!--
+ *******************************************************************************
+ * Copyright (c) 2016 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************
+-->
+
+
+ <script type="text/x-red" data-template-name="dx-server">
+  <div class="form-row">
+    <label for="node-config-input-name"><i class="icon-bookmark"></i>Name</label>
+    <input type="text" id="node-config-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-host"><i class="icon-bookmark"></i>Hostname</label>
+    <input type="text" id="node-config-input-host">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-port"><i class="icon-bookmark"></i>Port</label>
+    <input type="text" id="node-config-input-port">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-context"><i class="icon-bookmark"></i>Context Root</label>
+    <input type="text" id="node-config-input-context">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-username"><i class="icon-bookmark"></i>Username</label>
+    <input type="text" id="node-config-input-username">
+    </div>
+    <div class="form-row">
+    <label for="node-config-input-password"><i class="icon-bookmark"></i>Password</label>
+    <input type="password" id="node-config-input-password">
+  </div>
+</script>
+
+<script type="text/x-red" data-template-name="dx-content-item">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-action"><i class="icon-tag"></i> Operation</label>
+    <select id="node-input-action">
+      <option value="topic">Take the operation mode from msg.topic</option>
+      <option value="locate">Locate an existing content item</option>
+      <option value="create">Create a new content item</option>
+      <option value="update">Update an existing content item</option>
+      <option value="delete">Delete a content item</option>
+      <option value="updateConfig">Re-configures a rendering portlet based on a given contentitem</option>
+    </select>
+  </div>
+  <div id="parent" class="form-row">
+    <label for="node-input-parent">Default Parent</label>
+    <input type="text" id="node-input-parent" placeholder="Parent UUID">
+  </div>
+  <div id="template" class="form-row" style="display:none">
+    <label for="node-input-template">Default Template</label>
+    <input type="text" id="node-input-template" placeholder="Content Template UUID">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+</script>
+
+<script type="text/x-red" data-template-name="dx-content-element">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-action">Operation</label>
+    <select id="node-input-action">
+      <option value="topic">Take the operation mode from msg.topic</option>
+      <option value="update">Update a content element</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-elementconfig">Element Config</label>
+    <select id="node-input-elementconfig">
+      <option value="dynamic">Take all element information from the msg object</option>
+      <option value="preset">Pre-define element name and mimetype, data comes from the msg.payload object</option>
+    </select>
+  </div>
+  <div class="form-row" id="element-config-name" style="display: none">
+    <label for="node-input-elementname">Element Name</label>
+    <input type="text" id="node-input-elementname" placeholder="Name">
+  </div>
+  <div class="form-row" id="element-config-mimetype" style="display: none">
+    <label for="node-input-mimetype">Content Type</label>
+    <input type="text" id="node-input-mimetype" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+</script>
+
+<script type="text/x-red" data-template-name="dx-project">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-action">Operation</label>
+    <select id="node-input-action">
+      <option value="topic">Take the operation mode from msg.topic</option>
+      <option value="create">Create a new project</option>
+      <option value="review">Submit project for review</option>
+      <option value="approve">Approve project</option>
+      <option value="reject">Reject project</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+</script>
+
+<script type="text/x-red" data-template-name="dx-content-query">
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-server"><i class="icon-bookmark"></i> Server</label>
+    <input type="text" id="node-input-server">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="dx-project">
+  <p>
+  The <code>dx-project</code> node can be used to work with Projects in IBM Digital Experience.
+  This node can be chained with other nodes in the same category, to do
+  updates in the scope of a project
+  </p>
+
+  <p>
+  The operation can be controlled either controlled in the configuration of the node,
+  or by setting the <code>msg.topic</code> to one of the supported operations.
+  The following operations are supported
+  <ul>
+    <li><code>create</code> - Creates a new project. The project creation information
+    will be taken from the <code>msg.project</code> property. The following properties are supported.
+    <ul>
+      <li><code>name</code> - sets the administrative name. This property is required. if the
+      <code>msg.project</code> or the <code>msg.project.name</code> property does not exist. The
+      name will come from the <code>msg.payload</code> property
+      </li>
+      <li><code>title</code> - Sets the project title</li>
+      <li><code>description</code> - Sets the project description</li>
+    </ul>
+    </li>
+    <li><code>review</code> - puts the project referenced under <code>msg.project.name</code>
+    into review state
+    </li>
+    <li><code>approve</code> - puts the project referenced under <code>msg.project.name</code>
+    into approval state
+    </li>
+    <li><code>reject</code> - rejects the project referenced under <code>msg.project.name</code>
+    </li>
+  </ul>
+  </p>
+</script>
+
+<script type="text/x-red" data-help-name="dx-content-query">
+  <p>
+  This node can be used to query content items in WCM based on a given set of
+  parameters. The supported parameters can be found here (TODO fine WCM query API url).
+  The query parameters need to be set in the <code>msg.query</code> property.
+
+  The first output is getting triggered for every element in the resultset. The actual element is
+  exposed under the <code>msg.contentitem</code> property. In addition to that in the
+  <code>msg.loop.count</code> the position in the result set is exposed and the
+  <code>msg.loop.element</code> holds the raw data for the element retrieved from the WCM REST
+  API
+
+  The second output gets called after the the node is done iterating thru the resultset.
+  <code>msg.loop</code> and <code>msg.contentitem</code> will be reset at this point
+  </p>
+</script>
+
+<script type="text/x-red" data-help-name="dx-content-element">
+  <p>
+  This node can be used to update an element of aan existing content item. At the moment
+  the node only supports an update of an existing content element.
+
+  The contentitem needs to be referenced using the <code>msg.contentitem.id</code> property.
+  the information for the element data needs to be provided by the <code>msg.contentitem.elemenData</code>
+  property. This property is supposed to be an array. Every element in that arry needs to contain the following properties
+  <ul>
+    <li><code>name</code> -  the element name. An element with that name needs to exist in the referenced contentitem</li>
+    <li><code>contenttype</code> - the contenttype of the data which is going to be uploaded</li>
+    <li><code>data</code> - the data to be stored in the element</li>
+  </ul>
+
+  It is possible to pre-defined the content-type and name of the contnet element in the configuration dialog. In that case the
+  data for the content element comes from the <code>msg.payload</code> property.
+  </p>
+</script>
+
+<script type="text/x-red" data-help-name="dx-content-item">
+    <p>
+    This node deals with WCM content items in IBM Digital Experince. This node
+    is intended be be chained with the <code>dx-comtent-element</code> node. All
+    information from the below operations are stored in a way the the
+    <code>dx-content-element</code> node can work with the information without
+    doing any data transformation
+    </p>
+
+    <p>
+    The operation can be controlled either controlled in the configuration of the node,
+    or by setting the <code>msg.topic</code> to one of the supported operations.
+    The following operations are supported
+    <ul>
+    <li><code>locate</code> - can be used to find the configured content item for a
+    rendering portlet based on the Page id (<code>msg.contentitem.pageid</code>) and
+    Control ID (<code>msg.contentitem.controlid</code>)</li>. The contentitem id can be
+    retrieved from <code>msg.contentitem.id</code>.
+    <li><code>create</code> - can be used to create a new contentitem. In order to make use
+    of this function you either need to configure a parent and content template in the node
+    or the information needs to be passed by setting <code>msg.contentitem.parent</code> for
+    the sitearea information and <code>msg.contentitem.template</code> for the content template.
+    THe contentitem name has to be set by using <code>msg.contentitem.name</code>. The new
+    contentitem id is set under <code>msg.contentitem.id</code>.
+    </li>
+    <li><code>updateConfig</code> - This method allows you to re-configure a WCM rendering
+    portlet. You need to pass in Page id (<code>msg.contentitem.pageid</code>) and Control ID
+    (<code>msg.contentitem.controlid</code>) to identify the rendering portlet and
+    <code>msg.contentitem.id</code> to specify the new content item reference
+    </li>
+    </ul>
+    In case there is a problem the flow stops
+    </p>
+    <p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('dx-server', {
+    category: 'config',
+    defaults: {
+      name: {
+        value: "",
+        required: false
+      },
+      host: {
+        value: "localhost",
+        required: true
+      },
+      context: {
+        value: "/wps",
+        required: true
+      },
+      username: {
+        value: "",
+        required: true
+      },
+      password: {
+        value: "",
+        required: true
+      },
+      port: {
+        value: 10039,
+        required: true,
+        validate: RED.validators.number()
+      }
+    },
+    label: function() {
+      return (this.name||"http://" + this.host + ":" + this.port + "/wps/portal");
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('dx-content-item', {
+    category: 'Digital Experience',
+    color: '#F78B39',
+    defaults: {
+      name: {
+        value: "",
+        required: false
+      },
+      action: {
+        value: "topic",
+        required: false
+      },
+      parent: {
+        value: "",
+        required: false
+      },
+      template: {
+        value: "",
+        required: false
+      },
+      server: {
+        value: "",
+        type: "dx-server"
+      }
+    },
+    inputs: 1,
+    outputs: 1,
+    paletteLabel : "Content Item",
+    icon: "bridge.png",
+    label: function() {
+      return (this.name||"Content Item");
+    },
+    oneditprepare: function() {
+      $("#node-input-action").on('change', function() {
+        switch (this.value) {
+          case "create":
+            $("#template").show();
+            $("#parent").show();
+            break;
+          case "update":
+            $("#template").show();
+            $("#parent").show();
+            break;
+          default:
+            $("#template").hide();
+            $("#parent").hide();
+            break;
+        }
+      });
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('dx-content-element', {
+    category: 'Digital Experience',
+    color: '#F78B39',
+    defaults: {
+      name: {
+        value: "",
+        required: false
+      },
+      action: {
+        value: "update",
+        required: false
+      },
+      elementconfig: {
+        value: "dynamic",
+        required: false
+      },
+      elementname: {
+        value: "",
+        required: false
+      },
+      mimetype: {
+        value: "",
+        required: false
+      },
+      server: {
+        value: "",
+        type: "dx-server"
+      }
+    },
+    inputs: 1,
+    outputs: 1,
+    paletteLabel : "Content Element",
+    icon: "bridge.png",
+    label: function() {
+      return (this.name||"Content Element");
+    },
+    oneditprepare: function() {
+      $("#node-input-elementconfig").on('change', function() {
+        switch (this.value) {
+          case "preset":
+            $("#element-config-mimetype").show();
+            $("#element-config-name").show();
+            break;
+          default:
+            $("#element-config-mimetype").hide();
+            $("#element-config-name").hide();
+            break;
+        }
+      });
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('dx-project', {
+    category: 'Digital Experience',
+    color: '#F78B39',
+    defaults: {
+      name: {
+        value: "",
+        required: false
+      },
+      action: {
+        value: "topic",
+        required: false
+      },
+      server: {
+        value: "",
+        type: "dx-server"
+      }
+    },
+    inputs: 1,
+    outputs: 1,
+    paletteLabel : "Project",
+    icon: "bridge.png",
+    label: function() {
+      return (this.name||"Project");
+    },
+    oneditprepare: function() {
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('dx-content-query', {
+    category: 'Digital Experience',
+    color: '#F78B39',
+    defaults: {
+      name: {
+        value: "",
+        required: false
+      },
+      server: {
+        value: "",
+        type: "dx-server"
+      }
+    },
+    inputs: 1,
+    outputs: 2,
+    paletteLabel : "Query Content",
+    icon: "bridge.png",
+    label: function() {
+      return (this.name||"Query Content");
+    },
+    oneditprepare: function() {
+    }
+  });
+</script>
