@@ -7,7 +7,7 @@ Navigate into your node-red folder and use the ```npm``` command to get the exte
     cd $HOME/.node-red/
     npm install git+ssh://git@github.com:digexp/Sample-Node-RED-dx.git
 
-after the plugin is successfully installed restart your node-red process
+after the plugin is successfully installed restart your node-red process. In case you have problems running the above steps make sure you have setup your git ssh keys correctly like described [here]("https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/")
 
 ### Usage
 After a successful installation you should see a new section called Digital_Experience in the node section of the node-red editor.
@@ -28,9 +28,7 @@ The resulting sample flow would look like this
 
 You can download the and import the flow from [here](./sample/sample_flow.json)
 
-In case you want to make use of the sample flow you have to make sure you install the ```node-red-node-watson``` nodes by calling 
+In case you want to make use of the sample flow you have to make sure you install the ```node-red-node-watson``` nodes by calling
 
     cd $HOME/.node-red
     npm install node-red-node-watson
-
-
